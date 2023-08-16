@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use Illuminate\Http\Request;
@@ -17,22 +18,23 @@ class MailController extends Controller
             'phone' => $req->phone,
             'message' => $req->message
         ];
-        
+
         $recipientEmail = config('mail.username');
-        
-        Mail::send('Pages.MailDesign', ['data' => $data], function($message) use ($data) {
-            $message->to('theprimefinance7@gmail.com');
-            $message->subject('The Prime Fianance Contact Us Users');
+
+        Mail::send('Pages.MailDesign', ['data' => $data], function ($message) use ($data, $recipientEmail) {
+            $message->to($recipientEmail);
+            $message->subject('Someone contacted you from your website');
             $message->from($data["senderEmail"], $data['name']);
         });
-        
-        return redirect()->back()->with(['msg-success'=>'Thanks for contacting we will get back to you soon.']);
+
+        return redirect()->back()->with(['msg-success' => 'Thanks for contacting we will get back to you soon.']);
     }
-    function handleLang(Request $req) {
-        if($req->query('lng'))
+
+    function handleLang(Request $req)
     {
-        App::setlocale($req->query('lng'));
-    }
+        if ($req->query('lng')) {
+            App::setlocale($req->query('lng'));
+        }
         return redirect()->back();
     }
 }
